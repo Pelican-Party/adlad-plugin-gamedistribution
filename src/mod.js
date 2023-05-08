@@ -70,8 +70,22 @@ export function gameDistributionPlugin({
 			}, 5_000);
 		});
 
-		return await Promise.race([showAdPromise, timeoutPromise]);
+		const showAdResult = await Promise.race([showAdPromise, timeoutPromise]);
+
+		// The sdk as supposed to have fired both SDK_GAME_PAUSE and SDK_GAME_START (or neither)
+		// buuuut of course there is a chance that only SDK_GAME_PAUSE fires without SDK_GAME_START ever firing
+		// to make the game unpause again. This seems to happen when running the sdk on localhost.
+		// So just to make sure games are resumed, we'll set needsPause and needsMute back to false here.
+		if (pluginContext) {
+			pluginContext.setNeedsMute(false);
+			pluginContext.setNeedsPause(false);
+		}
+
+		return showAdResult;
 	}
+
+	/** @type {import("$adlad").AdLadPluginInitializeContext?} */
+	let pluginContext = null;
 
 	/** @type {import("$adlad").AdLadPlugin} */
 	const plugin = {
@@ -80,6 +94,8 @@ export function gameDistributionPlugin({
 			if (window.GD_OPTIONS) {
 				throw new Error("GameDistribution plugin is being initialized more than once");
 			}
+
+			pluginContext = ctx;
 
 			window.GD_OPTIONS = {
 				gameId,
