@@ -4,9 +4,21 @@ interface Window {
 		onEvent(event: GdEvent);
 	};
 	gdsdk: {
-		showAd(type?: "interstitial" | "rewarded");
+		showAd(type?: GdAdType, displayOptions?: GdDisplayOptions);
 		openConsole();
+		AdType: GdAdTypeEnum;
 	};
+}
+
+type GdAdTypeEnum = {
+	Display: "display";
+	Interstitial: "interstitial";
+	Rewarded: "rewarded";
+};
+type GdAdType = GdAdTypeEnum[keyof GdAdTypeEnum];
+
+interface GdDisplayOptions {
+	containerId: string;
 }
 
 interface GdEvent {

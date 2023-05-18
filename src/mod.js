@@ -22,7 +22,7 @@ export function gameDistributionPlugin({
 
 	/**
 	 * Calls `showAd` on the gdsdk but makes sure the promise is resolved once a timeout is reached.
-	 * @param {"interstitial" | "rewarded"} type
+	 * @param {GdAdType} type
 	 * @returns {Promise<import("$adlad").ShowFullScreenAdResult?>} A result if the ad failed for a specific reason
 	 * or null if it is not known whether an ad was shown or not.
 	 */
@@ -138,7 +138,7 @@ export function gameDistributionPlugin({
 		manualNeedsMute: true,
 		manualNeedsPause: true,
 		async showFullScreenAd() {
-			const result = await safeShowAd("interstitial");
+			const result = await safeShowAd(window.gdsdk.AdType.Interstitial);
 			if (result) {
 				return result;
 			}
@@ -149,12 +149,17 @@ export function gameDistributionPlugin({
 		},
 		async showRewardedAd() {
 			rewardReceived = false;
-			const result = await safeShowAd("rewarded");
+			const result = await safeShowAd(window.gdsdk.AdType.Rewarded);
 			if (result) return result;
 			return {
 				didShowAd: rewardReceived,
 				errorReason: null,
 			};
+		},
+		showBannerAd(options) {
+			window.gdsdk.showAd(window.gdsdk.AdType.Display, {
+				containerId: options.id,
+			});
 		},
 	};
 
