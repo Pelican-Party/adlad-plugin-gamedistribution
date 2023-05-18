@@ -1,6 +1,6 @@
 {
 	"name": "@adlad/plugin-gamedistribution",
-	"version": "0.0.3",
+	"version": "0.1.0",
 	"description": "AdLad plugin for the GameDistribution sdk.",
 	"main": "mod.js",
 	"types": "dist/adlad-plugin-gamedistribution.d.ts",
