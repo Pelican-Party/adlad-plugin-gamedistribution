@@ -87,8 +87,7 @@ export function gameDistributionPlugin({
 	/** @type {import("$adlad").AdLadPluginInitializeContext?} */
 	let pluginContext = null;
 
-	/** @type {import("$adlad").AdLadPlugin} */
-	const plugin = {
+	const plugin = /** @type {const} @satisfies {import("$adlad").AdLadPlugin} */ ({
 		name: "gamedistribution",
 		async initialize(ctx) {
 			if (window.GD_OPTIONS) {
@@ -161,7 +160,7 @@ export function gameDistributionPlugin({
 				containerId: options.id,
 			});
 		},
-	};
+	});
 
 	return plugin;
 }
